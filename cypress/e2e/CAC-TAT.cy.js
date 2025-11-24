@@ -27,6 +27,7 @@ describe('Central de Atendimento ao Cliente TAT', () => {
   cy.get('#open-text-area').type(longText, {delay: 0})
   //clicar no botão enviar
   cy.get('button[type="submit"]').click()
+
   //verificar se a mensagem de sucesso está visível
   cy.get('.success').should('be.visible')
   })
@@ -42,16 +43,19 @@ describe('Central de Atendimento ao Cliente TAT', () => {
   cy.get('#open-text-area').type('Teste de preenchimento de campo ')
   //clicar no botão enviar
   cy.get('button[type="submit"]').click()
+
   //verificar se a mensagem de erro está visível
   cy.get('.error').should('be.visible')
 
   })
+  //exercicio extra 3
 
   it('campo telefone continua vazio quando preenchido com valor não numérico', () => {
    cy.get('#phone').type('teste')
    .should('have.value','')
 
   })
+  //exercicio extra 4
 
   it('exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', () => { 
 cy.get('#firstName').type('João')
@@ -61,18 +65,17 @@ cy.get('#firstName').type('João')
   cy.get('#email').type('jandrecontrerascom')
   //marcar checkbox telefone obrigatório
   cy.get('#phone-checkbox').check()
-
-
   //preencher campo de texto
   cy.get('#open-text-area').type('Teste de preenchimento de campo ')
   //clicar no botão enviar
   cy.get('button[type="submit"]').click()
+
   //verificar se a mensagem de erro está visível
   cy.get('.error').should('be.visible')
 
 
   })
-
+//exercicio extra 5
   it('preenche e limpa os campos nome, sobrenome, email e telefone', () => {
     cy.get('#firstName').type('João').should('have.value', 'João').clear().should('have.value', '')
     cy.get('#lastName').type('Contreras').should('have.value', 'Contreras').clear().should('have.value', '')
@@ -80,11 +83,57 @@ cy.get('#firstName').type('João')
     cy.get('#phone').type('1234567890').should('have.value', '1234567890').clear().should('have.value', '')
 
   })
+  //exercicio extra 6
 
   it('exibe mensagem de erro ao submeter o formulário sem preencher os campos obrigatórios', () => {
 cy.get('button[type="submit"]').click()
+
   //verificar se a mensagem de erro está visível
   cy.get('.error').should('be.visible')
 })
+
+it('envia o formulário com sucesso usando um comando customizado', () => {
+cy.fillMandatoryFieldsAndSubmit()
+
+cy.get('.success').should('be.visible')
+
+
+})
+
+it.only('envia o formulário com sucesso usando um comando customizado com dados costumizaveis', () => {
+  
+const data = {
+  firstName: 'Ivete',
+  lastName: 'Maia',
+  email: 'Ivetemaia@example.com',
+  text: 'Teste de preenchimento de campo personalizado'
+}
+cy.fillMandatoryFieldsAndSubmit(data)
+
+cy.get('.success').should('be.visible')
+
+
+
+
+
+
+
+
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 })
