@@ -15,6 +15,7 @@ describe('Central de Atendimento ao Cliente TAT', () => {
 
   it('preenche os campos obrigatórios e envia o formulário', () => {
 
+    cy.clock()
 
     const longText = Cypress._.repeat('Texto longo', 20)
     //preecher nome 
@@ -30,10 +31,17 @@ describe('Central de Atendimento ao Cliente TAT', () => {
 
     //verificar se a mensagem de sucesso está visível
     cy.get('.success').should('be.visible')
+
+    cy.tick(3000)
+
+    cy.get('.success').should('not.be.visible')
   })
 
   //exercicio extra 2
   it('exibe mensagem de erro ao submeter o formulário com um email com formatação inválida', () => {
+
+    cy.clock()
+
     cy.get('#firstName').type('João')
     //preencher sobrenome
     cy.get('#lastName').type('Contreras')
@@ -46,6 +54,10 @@ describe('Central de Atendimento ao Cliente TAT', () => {
 
     //verificar se a mensagem de erro está visível
     cy.get('.error').should('be.visible')
+
+    cy.tick(3000)
+
+    cy.get('.success').should('not.be.visible')
 
   })
   //exercicio extra 3
@@ -193,32 +205,76 @@ describe('Central de Atendimento ao Cliente TAT', () => {
 
       })
   })
-it('verifica que a política de privacidade abre em outra aba sem a necessidade de um clique',()=>{
-cy.contains('a','Política de Privacidade')
-.should('have.attr','href','privacy.html',)
-.and('have.attr','target','_blank')
+  it('verifica que a política de privacidade abre em outra aba sem a necessidade de um clique', () => {
+    cy.contains('a', 'Política de Privacidade')
+      .should('have.attr', 'href', 'privacy.html',)
+      .and('have.attr', 'target', '_blank')
+
+  })
+  it('acessa a pagina da politica de privacidade removendo o target e entao clicando', () => {
+    cy.contains('a', 'Política de Privacidade')
+      .invoke('removeAttr', 'target')
+      .click()
+
+    cy.contains('h1', 'CAC TAT - Política de Privacidade').should('be.visible')
+
+  })
+
+  it('Testa a página da política de pricacidade de forma independente', () => {
+    cy.contains('a', 'Política de Privacidade')
+
+
+
+
+  })
+
+  it('exibe e oculta as mensagens de sucesso e erro usando .invoke()', () => {
+    cy.get('.success')
+      .should('not.be.visible')
+      .invoke('show')
+      .should('be.visible')
+      .and('contain', 'Mensagem enviada com sucesso.')
+      .invoke('hide')
+      .should('not.be.visible')
+    cy.get('.error')
+      .should('not.be.visible')
+      .invoke('show')
+      .should('be.visible')
+      .and('contain', 'Valide os campos obrigatórios!')
+      .invoke('hide')
+      .should('not.be.visible')
+  })
+
+
+  it('preenche a area de texto usando o comando invoke', () => {
+    const longText = Cypress._.repeat('Texto longo', 20)
+    cy.get('#open-text-area')
+      .invoke('val', longText)
+      .should('have.value', longText)
+  })
+
+  it('faz uma requisisção HTTP', () => {
+
+    cy.request('https://cac-tat.s3.eu-central-1.amazonaws.com/index.html')
+      .then((response) => {
+        expect(response.status).to.equal(200)
+        expect(response.statusText).to.equal('OK')
+        expect(response.body).to.include('CAC TAT')
+
+
+
+      })
+  })
+
+
+it.only('encontra o gato escondido', () => {  
+cy.get('#cat')
+  .invoke('show')
+  .should('be.visible') 
+
+
 
 })
-it('acessa a pagina da politica de privacidade removendo o target e entao clicando',()=>{
-cy.contains('a','Política de Privacidade')
-.invoke('removeAttr','target')
-.click()
-
-cy.contains('h1', 'CAC TAT - Política de Privacidade').should('be.visible')
-
-})
-
-it('Testa a página da política de pricacidade de forma independente',()=>{
-cy.contains('a','Política de Privacidade')
-
-
-
-
-})
-
-
-
-
 
 })
 
