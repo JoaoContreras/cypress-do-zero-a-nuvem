@@ -8,3 +8,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Cypress run
         uses: cypress-io/github-action@v6
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.a8cd1f9a-4d00-4e5f-b773-32058d2bfb6e }}
+        with:
+          command: npm run test:cloud
